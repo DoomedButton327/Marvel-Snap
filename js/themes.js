@@ -4,6 +4,23 @@
 ================================================================ */
 
 const THEMES = {
+  marvelsnap: {
+    label: 'Marvel Snap',
+    accent: '#F5C518',
+    vars: {
+      '--acid':'#F5C518','--acid-dim':'#c79e10','--acid-soft':'rgba(245,197,24,.12)',
+      '--acid-glow':'0 0 20px rgba(245,197,24,.35)','--acid-border':'rgba(245,197,24,.28)',
+      '--border-acid':'rgba(245,197,24,.28)',
+      '--cyan':'#e62429','--cyan-soft':'rgba(230,36,41,.1)','--border-cyan':'rgba(230,36,41,.22)',
+      '--bg':'#0b0a0c','--bg-1':'#121016','--bg-2':'#1c1822','--bg-3':'#28223a','--bg-4':'#332a4a',
+      '--bg-card':'rgba(18,16,22,.82)',
+      '--border':'rgba(245,197,24,.14)','--border-2':'rgba(230,36,41,.10)',
+      '--text':'#f0edf5','--text-soft':'#b8b0c8','--muted':'#6f6580','--muted-2':'#453c58',
+      '--red':'#e62429','--gold':'#F5C518',
+      '--theme-poster-bg':'#0b0a0c','--theme-poster-text':'#F5C518',
+      '--theme-accent':'#e62429',
+    },
+  },
   godmode: {
     label: 'Godmode',
     accent: '#C8F135',
@@ -157,12 +174,12 @@ const THEMES = {
 };
 
 function initTheme() {
-  const id = Storage.loadTheme() || 'godmode';
+  const id = Storage.loadTheme() || 'marvelsnap';
   applyTheme(id, false);
 }
 
 function applyTheme(id, persist = true) {
-  const theme = THEMES[id] || THEMES.godmode;
+  const theme = THEMES[id] || THEMES.marvelsnap;
   const css = Object.entries(theme.vars).map(([k, v]) => `${k}:${v}`).join(';');
   let el = document.getElementById('theme-override-style');
   if (!el) {
