@@ -213,6 +213,8 @@ function renderResults() {
            <i class="fas fa-camera"></i><span class="btn-evidence-label">Screenshot</span>
          </button>` : '';
 
+    const impact = snapImpact(Math.max(r.homeGoals || 0, r.awayGoals || 0));
+
     return `
       <div class="result-card ${borderClass}" style="animation-delay:${i * 0.03}s">
         <div class="result-top">
@@ -231,9 +233,12 @@ function renderResults() {
             <span class="result-outcome-badge ${hBadge}">${hWin ? 'WIN' : isDraw ? 'DRAW' : 'LOSS'}</span>
           </div>
           <div class="result-score">
-            <span class="score-num">${r.homeGoals}</span>
-            <span class="score-sep">–</span>
-            <span class="score-num">${r.awayGoals}</span>
+            <div class="score-row">
+              <span class="score-num">${r.homeGoals}</span>
+              <span class="score-sep">–</span>
+              <span class="score-num">${r.awayGoals}</span>
+            </div>
+            ${impact.label ? `<div class="snap-impact${impact.big ? ' big' : ''}">${impact.label}</div>` : ''}
           </div>
           <div class="result-side result-away">
             <span class="result-outcome-badge ${aBadge}">${aWin ? 'WIN' : isDraw ? 'DRAW' : 'LOSS'}</span>
@@ -242,6 +247,15 @@ function renderResults() {
         </div>
       </div>`;
   }).join('');
+}
+
+// ── Snap Impact label (based on final Cube count) ──────────────
+function snapImpact(cubes) {
+  if (cubes >= 8) return { label: 'MEGA SNAP', big: true };
+  if (cubes >= 4) return { label: 'Double Snap', big: true };
+  if (cubes >= 2) return { label: 'Snap Win', big: false };
+  if (cubes === 1) return { label: 'Retreat Win', big: false };
+  return { label: '', big: false };
 }
 
 // ── Lightbox ──────────────────────────────────────────────────
