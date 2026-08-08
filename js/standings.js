@@ -120,29 +120,46 @@ function captureElement(elementId, filename, successMsg) {
     el.style.cssText = 'position:absolute;top:0;left:-9999px;z-index:-1;visibility:hidden;';
   };
 
-  requestAnimationFrame(() => {
+  // Wait for web fonts (Anton, DM Sans, JetBrains Mono) to actually finish
+  // downloading before we screenshot — otherwise html2canvas captures
+  // whatever fallback font was showing at that instant, and it's baked
+  // into the PNG permanently. document.fonts.ready alone can resolve
+  // before late-requested weights finish, so force-load the exact ones
+  // the poster uses, then still double-rAF for layout to settle.
+  const fontsPromise = (document.fonts && document.fonts.ready)
+    ? Promise.all([
+        document.fonts.load('400 2.6rem Anton'),
+        document.fonts.load('700 1rem "JetBrains Mono"'),
+        document.fonts.load('800 1rem "DM Sans"'),
+        document.fonts.ready,
+      ]).catch(() => null)
+    : Promise.resolve();
+
+  fontsPromise.then(() => {
     requestAnimationFrame(() => {
-      html2canvas(el, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#0b0a0c',
-        logging: false,
-        onclone: doc => {
-          const c = doc.getElementById(elementId);
-          if (c) c.style.cssText = 'position:static;opacity:1;visibility:visible;width:800px;';
-        },
-      }).then(canvas => {
-        restore();
-        const link = document.createElement('a');
-        link.download = filename;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        toast(successMsg, 'success');
-      }).catch(err => {
-        restore();
-        console.error('captureElement error:', err);
-        toast('Export failed — check console for details.', 'error');
+      requestAnimationFrame(() => {
+        html2canvas(el, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#0b0a0c',
+          logging: false,
+          onclone: doc => {
+            const c = doc.getElementById(elementId);
+            if (c) c.style.cssText = 'position:static;opacity:1;visibility:visible;width:800px;';
+          },
+        }).then(canvas => {
+          restore();
+          const link = document.createElement('a');
+          link.download = filename;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          toast(successMsg, 'success');
+        }).catch(err => {
+          restore();
+          console.error('captureElement error:', err);
+          toast('Export failed — check console for details.', 'error');
+        });
       });
     });
   });
