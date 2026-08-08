@@ -766,6 +766,10 @@
 .preg-actions { display: flex; gap: 8px; margin-top: 8px; }
 
 /* ─── EXPORT POSTERS (html2canvas) ──────────────────────────── */
+/* NOTE: html2canvas renders ::before/::after pseudo-elements and
+   filter:blur() unreliably, so this section avoids both — the
+   halftone texture is a real .poster-halftone div, and the ambient
+   glows use a pre-softened radial-gradient instead of filter:blur. */
 .export-poster {
   width: 800px;
   background: #0b0a0c;
@@ -773,21 +777,22 @@
   position: relative;
   overflow: hidden;
 }
-.export-poster::before {
-  content: '';
+.poster-halftone {
   position: absolute; inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1.4px);
-  background-size: 8px 8px;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1.4px, transparent 1.6px);
+  background-size: 9px 9px;
   pointer-events: none;
   z-index: 0;
 }
 .poster-glow-1 {
-  position: absolute; top: -140px; left: -100px; width: 400px; height: 400px;
-  background: #e62429; filter: blur(110px); opacity: .16; border-radius: 50%; z-index: 0;
+  position: absolute; top: -180px; left: -140px; width: 480px; height: 480px;
+  background: radial-gradient(circle, rgba(230,36,41,.30) 0%, rgba(230,36,41,.14) 40%, rgba(230,36,41,0) 72%);
+  border-radius: 50%; z-index: 0;
 }
 .poster-glow-2 {
-  position: absolute; bottom: -120px; right: -100px; width: 360px; height: 360px;
-  background: #F5C518; filter: blur(110px); opacity: .13; border-radius: 50%; z-index: 0;
+  position: absolute; bottom: -160px; right: -140px; width: 440px; height: 440px;
+  background: radial-gradient(circle, rgba(245,197,24,.26) 0%, rgba(245,197,24,.11) 40%, rgba(245,197,24,0) 72%);
+  border-radius: 50%; z-index: 0;
 }
 .poster-top-bar    { height: 6px; background: linear-gradient(90deg, #e62429, #F5C518, #e62429); position: relative; z-index: 2; }
 .poster-bottom-bar { height: 6px; background: linear-gradient(90deg, #e62429, #F5C518, #e62429); position: relative; z-index: 2; }
