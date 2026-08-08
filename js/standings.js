@@ -3,6 +3,17 @@
    Leaderboard · podium · stats ticker · export poster
 ================================================================ */
 
+// ── Current active win streak (from most recent form entries) ──
+function currentWinStreak(form) {
+  if (!form || !form.length) return 0;
+  let streak = 0;
+  for (let i = form.length - 1; i >= 0; i--) {
+    if (form[i] === 'W') streak++;
+    else break;
+  }
+  return streak;
+}
+
 function renderLeaderboard() {
   const sorted = sortedPlayers();
   const tbody = document.getElementById('leaderboardBody');
@@ -14,6 +25,7 @@ function renderLeaderboard() {
     if (sorted.length >= 3) {
       podium.style.display = 'grid';
       const [first, second, third] = sorted;
+      const s1 = currentWinStreak(first.form || []);
       podium.innerHTML = `
         <div class="podium-card rank-2">
           <div class="podium-medal">🥈</div>
@@ -26,6 +38,7 @@ function renderLeaderboard() {
           <div class="podium-rank">1ST</div>
           <div class="podium-name">${esc(first.username)}</div>
           <div class="podium-pts"><strong>${first.points || 0}</strong> pts</div>
+          ${s1 >= 3 ? `<div class="podium-streak"><i class="fas fa-fire"></i> ${s1}-WIN STREAK</div>` : ''}
         </div>
         <div class="podium-card rank-3">
           <div class="podium-medal">🥉</div>
@@ -58,12 +71,14 @@ function renderLeaderboard() {
     const zone = rank <= 3 ? 'zone-champ' : '';
     const form = buildFormBadges(p.form || []);
     const susp = p.suspended ? '<span class="susp-badge">SUSP</span>' : '';
+    const streak = currentWinStreak(p.form || []);
+    const streakBadge = streak >= 3 ? `<span class="streak-flame"><i class="fas fa-fire"></i>${streak}</span>` : '';
 
     return `
       <tr class="${zone} ${p.suspended ? 'row-suspended' : ''}" style="animation-delay:${i * 0.025}s">
         <td><span class="pos-badge ${posClass}">${rank}</span></td>
         <td class="player-col" onclick="openPlayerProfile('${esc(p.username)}')" style="cursor:pointer">
-          <div class="player-cell-name">${esc(p.name)}${susp}</div>
+          <div class="player-cell-name">${esc(p.name)}${susp}${streakBadge}</div>
           <div class="player-cell-username">@${esc(p.username)}</div>
         </td>
         <td>${p.played || 0}</td>
@@ -111,7 +126,7 @@ function captureElement(elementId, filename, successMsg) {
         scale: 2,
         useCORS: true,
         allowTaint: true,
-        backgroundColor: '#0A0A0C',
+        backgroundColor: '#0b0a0c',
         logging: false,
         onclone: doc => {
           const c = doc.getElementById(elementId);
@@ -146,6 +161,9 @@ function exportFixturesImage() {
   const sub = document.getElementById('poster-fixture-sub');
   if (sub) sub.textContent = _posterSeasonLabel();
 
+  const dateEl = document.getElementById('poster-fixture-date');
+  if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' });
+
   const list = document.getElementById('poster-fixture-list');
   list.innerHTML = '';
 
@@ -154,8 +172,8 @@ function exportFixturesImage() {
 
   if (active.length) {
     const hdr = document.createElement('div');
-    hdr.style.cssText = 'background:rgba(76,217,100,0.1);border:2px solid rgba(76,217,100,0.3);color:#4cd964;padding:10px;margin:12px 0;border-radius:8px;text-align:center;font-weight:700;font-size:0.9rem;letter-spacing:1px;';
-    hdr.textContent = '▶ ACTIVE FIXTURES';
+    hdr.className = 'poster-section-banner active';
+    hdr.innerHTML = '<span class="dot"></span> ACTIVE FIXTURES';
     list.appendChild(hdr);
 
     active.forEach(f => {
@@ -168,7 +186,7 @@ function exportFixturesImage() {
           <div class="poster-player-name">${esc(hp?.name || f.home)}</div>
           <div class="poster-player-details">${hp?.phone || 'N/A'} · ${esc(f.home)}</div>
         </div>
-        <div class="poster-match-vs">VS</div>
+        <div class="poster-match-vs"><span>VS</span></div>
         <div class="poster-match-away">
           <div class="poster-player-name">${esc(ap?.name || f.away)}</div>
           <div class="poster-player-details">${ap?.phone || 'N/A'} · ${esc(f.away)}</div>
@@ -179,27 +197,26 @@ function exportFixturesImage() {
 
   if (postponed.length) {
     const hdr = document.createElement('div');
-    hdr.style.cssText = 'background:rgba(255,149,0,0.1);border:2px solid rgba(255,149,0,0.3);color:#FF9500;padding:10px;margin:12px 0;border-radius:8px;text-align:center;font-weight:700;font-size:0.9rem;letter-spacing:1px;';
-    hdr.textContent = '⏸ POSTPONED FIXTURES';
+    hdr.className = 'poster-section-banner postponed';
+    hdr.innerHTML = '<span class="dot"></span> POSTPONED FIXTURES';
     list.appendChild(hdr);
 
     postponed.forEach(f => {
       const hp = State.players.find(p => p.username === f.home);
       const ap = State.players.find(p => p.username === f.away);
       const row = document.createElement('div');
-      row.className = 'poster-match-row';
-      row.style.opacity = '0.6';
+      row.className = 'poster-match-row poster-postponed-row';
       row.innerHTML = `
         <div class="poster-match-home">
           <div class="poster-player-name">${esc(hp?.name || f.home)}</div>
           <div class="poster-player-details">${hp?.phone || 'N/A'} · ${esc(f.home)}</div>
         </div>
-        <div class="poster-match-vs" style="background:rgba(255,149,0,0.15);color:#FF9500;">⏸</div>
+        <div class="poster-match-vs" style="background:linear-gradient(135deg,#FF9500,#cc7700);"><span>⏸</span></div>
         <div class="poster-match-away">
           <div class="poster-player-name">${esc(ap?.name || f.away)}</div>
           <div class="poster-player-details">${ap?.phone || 'N/A'} · ${esc(f.away)}</div>
         </div>
-        <div style="text-align:center;font-size:0.7rem;color:#FF9500;margin-top:6px;font-weight:600;">Postponed by ${esc(f.postponedBy)}</div>`;
+        <div class="poster-postponed-by">POSTPONED BY ${esc(f.postponedBy).toUpperCase()}</div>`;
       list.appendChild(row);
     });
   }
@@ -232,7 +249,7 @@ function exportStandingsImage() {
       <div class="${posClass}">${rank}</div>
       <div>
         ${esc(p.name)}
-        <div style="font-size:0.85em;color:#aaa;margin-top:2px;">${esc(p.username)}</div>
+        <div style="font-size:0.85em;color:#8a8296;margin-top:2px;font-family:'JetBrains Mono',monospace;">${esc(p.username)}</div>
       </div>
       <div>${p.played || 0}</div>
       <div>${p.wins   || 0}</div>
