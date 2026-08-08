@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b0a0c" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Marvel Snap League · Mettlestate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Anton&display=swap" rel="stylesheet" />
+    <style>
+        /* ── Reset ── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --marvel-red: #E62429;
+            --marvel-red-dim: rgba(230, 36, 41, .12);
+            --marvel-red-border: rgba(230, 36, 41, .30);
+            --gold: #F5C518;
+            --gold-dim: rgba(245, 197, 24, .10);
+            --gold-border: rgba(245, 197, 24, .25);
+            --blue: #1A73E8;
+            --blue-dim: rgba(26, 115, 232, .10);
+            --bg: #0b0a0c;
+            --bg-1: #121016;
+            --bg-2: #1c1822;
+            --bg-3: #28223a;
+            --border: rgba(255, 255, 255, .06);
+            --text: #f0edf5;
+            --text-soft: #b8b0c8;
+            --muted: #6f6580;
+            --green: #34C759;
+            --red: #FF2D55;
+            --cyan: #00d4ff;
+            --shadow: 0 20px 60px rgba(0, 0, 0, .7);
+        }
+
+        html,
+        body {
+            min-height: 100%;
+            background: var(--bg);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Background orbs ── */
+        .orb-field {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: .06;
+        }
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--marvel-red);
+            top: -120px;
+            left: -100px;
+            animation: orbFloat 22s ease-in-out infinite;
+        }
+        .orb-2 {
+            width: 280px;
+            height: 280px;
+            background: var(--gold);
+            bottom: 10%;
+            right: -60px;
+            animation: orbFloat 26s ease-in-out infinite reverse;
+        }
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--blue);
+            top: 40%;
+            left: 60%;
+            animation: orbFloat 30s ease-in-out infinite 4s;
+        }
+        @keyframes orbFloat {
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-30px) scale(1.05);
+            }
+        }
+
+        /* ── Stars ── */
+        .stars {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--d, 3s) var(--delay, 0s) ease-in-out infinite;
+        }
+        @keyframes twinkle {
+            0%,
+            100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: var(--op, .5);
+            }
+        }
+
+        /* ── Page ── */
+        .page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 16px env(safe-area-inset-bottom);
+        }
+
+        /* ── Main Card ── */
+        .card {
+            width: 100%;
+            max-width: 520px;
+            background: rgba(18, 16, 22, .88);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 32px 28px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: var(--shadow);
+            animation: cardIn .5s cubic-bezier(.22, 1, .36, 1) both;
+        }
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: scale(.94) translateY(24px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* ── Header ── */
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+        .logo-icon {
+            color: var(--marvel-red);
+            filter: drop-shadow(0 0 8px rgba(230, 36, 41, .3));
+        }
+        .logo-text {
+            font-family: 'Anton', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: .06em;
+            color: var(--text);
+        }
+        .logo-text span {
+            color: var(--marvel-red);
+        }
+        .header-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.2rem;
+            letter-spacing: .04em;
+            background: linear-gradient(135deg, var(--marvel-red), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2px;
+        }
+        .header-sub {
+            font-size: .9rem;
+            color: var(--text-soft);
+            letter-spacing: .04em;
+        }
+        .header-sub strong {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* ── Rules Section ── */
+        .rules-wrap {
+            margin-bottom: 24px;
+            border-radius: 14px;
+            border: 1px solid var(--gold-border);
+            background: var(--bg-1);
+            overflow: hidden;
+        }
+        .rules-toggle {
+            width: 100%;
+            padding: 14px 18px;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: .06em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background .2s;
+            text-align: left;
+        }
+        .rules-toggle:hover {
+            background: var(--bg-2);
+        }
+        .rules-toggle .arrow {
+            transition: transform .3s ease;
+            color: var(--gold);
+        }
+        .rules-toggle .arrow.open {
+            transform: rotate(180deg);
+        }
+        .rules-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .4s ease, padding .3s ease;
+            padding: 0 18px;
+        }
+        .rules-body.open {
+            max-height: 1200px;
+            padding: 0 18px 18px 18px;
+        }
+        .rules-body-inner {
+            padding-top: 6px;
+            font-size: .82rem;
+            line-height: 1.7;
+            color: var(--text-soft);
+        }
+        .rules-body-inner .rule-block {
+            margin-bottom: 14px;
+            padding: 10px 14px;
+            background: var(--bg-2);
+            border-radius: 10px;
+            border-left: 3px solid var(--gold);
+        }
+        .rules-body-inner .rule-block:last-child {
+            margin-bottom: 0;
+        }
+        .rules-body-inner .rule-block .r-head {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            letter-spacing: .04em;
+            color: var(--gold);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .rules-body-inner .rule-block .r-head .num {
+            color: var(--marvel-red);
+            margin-right: 6px;
+        }
+        .rules-body-inner .rule-block p {
+            margin: 0;
+            font-size: .8rem;
+            color: var(--text-soft);
+        }
+        .rules-body-inner .rule-block p strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+        .rules-body-inner .rule-block .highlight {
+            color: var(--gold);
+        }
+        .rules-body-inner .rule-block .danger {
+            color: var(--marvel-red);
+        }
+        .rules-footer-text {
+            margin-top: 8px;
+            font-size: .7rem;
+            color: var(--muted);
+            text-align: center;
+            letter-spacing: .02em;
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+        }
+        .rules-footer-text a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        .rules-footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Form ── */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-label {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .65rem;
+            letter-spacing: .08em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: .9rem;
+            font-family: 'DM Sans', sans-serif;
+            transition: border-color .2s, background .2s, box-shadow .2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold-border);
+            background: var(--bg-3);
+            box-shadow: 0 0 0 3px rgba(245, 197, 24, .08);
+        }
+        .form-input::placeholder {
+            color: var(--muted);
+        }
+        textarea.form-input {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        /* Phone row */
+        .phone-row {
+            display: flex;
+            gap: 8px;
+        }
+        .country-select {
+            flex-shrink: 0;
+            width: 110px;
+            padding: 12px 10px;
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: .85rem;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236f6580' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 28px;
+            transition: border-color .2s, background .2s;
+        }
+        .country-select:focus {
+            outline: none;
+            border-color: var(--gold-border);
+            background-color: var(--bg-3);
+        }
+        .phone-row .form-input {
+            flex: 1;
+        }
+
+        /* Submit */
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--marvel-red), #b71c1c);
+            color: #fff;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            letter-spacing: .08em;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform .12s, box-shadow .2s, opacity .15s;
+            margin-top: 4px;
+            box-shadow: 0 4px 20px rgba(230, 36, 41, .25);
+        }
+        .btn-submit:hover {
+            opacity: .92;
+            box-shadow: 0 6px 28px rgba(230, 36, 41, .35);
+        }
+        .btn-submit:active {
+            transform: scale(.97);
+            opacity: .85;
+        }
+        .btn-submit:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Status */
+        .status-msg {
+            text-align: center;
+            font-size: .85rem;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 12px;
+            display: none;
+        }
+        .status-success {
+            background: rgba(52, 199, 89, .12);
+            color: var(--green);
+            border: 1px solid rgba(52, 199, 89, .25);
+            display: block;
+        }
+        .status-error {
+            background: rgba(255, 45, 85, .12);
+            color: var(--red);
+            border: 1px solid rgba(255, 45, 85, .25);
+            display: block;
+        }
+        .status-warn {
+            background: rgba(255, 149, 0, .12);
+            color: #ff9500;
+            border: 1px solid rgba(255, 149, 0, .25);
+            display: block;
+        }
+
+        /* Field errors */
+        .field-error {
+            font-size: .72rem;
+            color: var(--red);
+            margin-top: 4px;
+            display: none;
+        }
+        .field-error.show {
+            display: block;
+        }
+
+        /* ── Already registered screen ── */
+        .already-card {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 14px;
+            padding: 10px 0;
+        }
+        .already-card.show {
+            display: flex;
+        }
+        .already-icon {
+            color: var(--gold);
+        }
+        .already-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: .04em;
+            background: linear-gradient(135deg, var(--gold), var(--marvel-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .already-sub {
+            font-size: .85rem;
+            color: var(--text-soft);
+            line-height: 1.6;
+            max-width: 360px;
+        }
+        .already-info {
+            width: 100%;
+            background: var(--bg-2);
+            border: 1px solid var(--gold-border);
+            border-radius: 12px;
+            padding: 14px 18px;
+            text-align: left;
+        }
+        .already-info p {
+            font-size: .75rem;
+            color: var(--muted);
+            margin-bottom: 2px;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: .02em;
+        }
+        .already-info strong {
+            color: var(--text);
+            font-size: .9rem;
+        }
+        .already-contact {
+            font-size: .75rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+        .already-contact strong {
+            color: var(--gold);
+        }
+
+        /* ── Footer ── */
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: .7rem;
+            color: var(--muted);
+            letter-spacing: .04em;
+        }
+        .footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Spinner ── */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .spin {
+            animation: spin .7s linear infinite;
+            display: inline-block;
+        }
+
+        /* ── Admin reset (hidden) ── */
+        .admin-reset-area {
+            margin-top: 12px;
+            text-align: center;
+            font-size: .6rem;
+            color: var(--muted);
+            opacity: .3;
+            transition: opacity .3s;
+            cursor: default;
+        }
+        .admin-reset-area:hover {
+            opacity: .7;
+        }
+        .admin-reset-area button {
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-size: .6rem;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 2px 6px;
+            font-family: inherit;
+        }
+        .admin-reset-area button:hover {
+            color: var(--red);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .card {
+                padding: 22px 16px;
+                border-radius: 18px;
+            }
+            .header-title {
+                font-size: 1.7rem;
+            }
+            .logo-text {
+                font-size: 1.3rem;
+            }
+            .rules-toggle {
+                font-size: .95rem;
+                padding: 12px 14px;
+            }
+            .rules-body-inner .rule-block {
+                padding: 8px 12px;
+            }
+            .phone-row {
+                flex-wrap: wrap;
+            }
+            .country-select {
+                width: 100%;
+            }
+            .btn-submit {
+                font-size: 1rem;
+                padding: 13px;
+            }
+            .already-title {
+                font-size: 1.5rem;
+            }
+        }
+        @media (max-width: 380px) {
+            .card {
+                padding: 18px 12px;
+            }
+            .header-title {
+                font-size: 1.4rem;
+            }
+            .logo-text {
+                font-size: 1.1rem;
+            }
+            .rules-body-inner .rule-block p {
+                font-size: .72rem;
+            }
+        }
+
+        /* Scrollbar */
+        .rules-body::-webkit-scrollbar {
+            width: 4px;
+        }
+        .rules-body::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .rules-body::-webkit-scrollbar-thumb {
+            background: var(--gold-border);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Orbs ── -->
+    <div class="orb-field" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <div class="stars" id="stars-container" aria-hidden="true"></div>
+
+    <!-- ── Page ── -->
+    <div class="page">
+        <div class="card">
+
+            <!-- Header -->
+            <div class="header">
+                <div class="logo-row">
+                    <span class="logo-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </span>
+                    <span class="logo-text">METTLE<span>STATE</span></span>
+                </div>
+                <h1 class="header-title">MARVEL SNAP LEAGUE</h1>
+                <p class="header-sub"><strong>Season 1</strong> · South Africa</p>
+            </div>
+
+            <!-- ── Already-registered screen ── -->
+            <div class="already-card" id="already-registered">
+                <span class="already-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </span>
+                <div class="already-title">Already Registered</div>
+                <p class="already-sub">You've already submitted your registration from this device. The admin will review and add you to the league shortly.</p>
+                <div class="already-info" id="already-info-block"></div>
+                <p class="already-contact">If this is a mistake, contact <strong>@Tyron</strong> on WhatsApp.</p>
+            </div>
+
+            <!-- ── Main Form ── -->
+            <div id="reg-form-wrap">
+
+                <!-- Rules (collapsible) -->
+                <div class="rules-wrap">
+                    <button class="rules-toggle" id="rulesToggle" aria-expanded="false">
+                        <span>📜 LEAGUE RULES · SEASON 1</span>
+                        <span class="arrow" id="rulesArrow">▾</span>
+                    </button>
+                    <div class="rules-body" id="rulesBody">
+                        <div class="rules-body-inner">
+
+                            <div class="rule-block">
+                                <div class="r-head"><span class="num">1</span> Fixtures &amp; Scheduling</div>
+                                <p>Fixtures are sent between <strong>00:00–10:00 SAST (GMT+2)</strong>, Monday–Saturday, excluding cup days and public holidays. Deadline for results is <strong>23:59 same day</strong>. <span class="danger">NO LATE SUBMISSIONS.</span> You <strong>cannot</strong> send a first message after <strong>19:00</strong>. Fixtures show the first <strong>4 letters</strong> of each opponent's WhatsApp username.</p>
+                            </div>
+
+                            <div class="rule-block">
+                                <div class="r-head"><span class="num">2</span> Result Submission</div>
+                                <p>Submit a <strong>screenshot</strong> of your match result (final Cube count / win screen) within a <strong>15‑minute grace period</strong> after the match ends. If your opponent didn't respond, submit <strong>screenshot evidence</strong> of that attempt within a <strong>6‑hour grace period</strong> (only opens after 19:00). If nothing is submitted, the game is recorded as a <strong>draw</strong>. Tag <strong>both admins</strong> in the Mettlestate group. <span class="highlight">All league messages must go on the Mettlestate group — no direct messaging.</span></p>
+                            </div>
+
+                            <div class="rule-block">
+                                <div class="r-head"><span class="num">3</span> No‑Shows &amp; Forfeits</div>
+                                <p>If an opponent doesn't arrive at the agreed time, <strong>automatic forfeit</strong> after a <strong>10‑minute grace period</strong>. If your opponent sets a time and is <strong>30 minutes late</strong>, you are awarded the win. Failure to follow this process results in a <strong>forfeit or draw</strong> at admin discretion.</p>
+                            </div>
+
+                            <div class="rule-block">
+                                <div class="r-head"><span class="num">4</span> Postponements</div>
+                                <p>Each player may postpone <strong>20 matches per season</strong>. Exceptions for valid reasons (device issues, family emergency, etc.). If a player is unreachable mid‑session and <strong>both submit screenshot evidence</strong>, the result is a <strong>draw or postponement</strong> at admin discretion.</p>
+                            </div>
+
+                            <div class="rule-block">
+                                <div class="r-head"><span class="num">5</span> Disconnections</div>
+                                <p>If disconnected mid‑match, <strong>immediately report</strong> to the league admin and your opponent to arrange a rematch. If network or app issues are the cause, provide <strong>screenshots</strong> of the match state at disconnection, or a video if possible. <span class="danger">No evidence = straight forfeit. No excuses.</span></p>
+                            </div>
+
+                            <div class="rule-block">
+                                <div class="r-head"><span class="num">6</span> Disputes &amp; Admin</div>
+                                <p>All disputes are handled by the <strong>organisers, helpers, and admin</strong>. Raise it in the group. Admin decisions are <strong>final</strong>. Rules may be updated between seasons at organiser discretion. Visit <a href="https://mettlestate.com" target="_blank" style="color:var(--gold);text-decoration:none;">mettlestate.com</a> for community and general rules.</p>
+                            </div>
+
+                            <div class="rules-footer-text">
+                                ⚡ <em>Governed under Mettlestate Fair Play: no account sharing, one account per player, no cheating.</em> &nbsp;·&nbsp; #MettlestateLeague
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form fields -->
+                <div class="form-group">
+                    <label class="form-label" for="reg-wa-username">WhatsApp Username *</label>
+                    <input class="form-input" id="reg-wa-username" type="text" placeholder="e.g. @Tyron" autocomplete="off" spellcheck="false" />
+                    <div class="field-error" id="err-wa-username">WhatsApp username is required.</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reg-phone">WhatsApp Number *</label>
+                    <div class="phone-row">
+                        <select class="country-select" id="reg-country-code" aria-label="Country code">
+                            <option value="+27">🇿🇦 +27</option>
+                            <option value="+263">🇿🇼 +263</option>
+                            <option value="+260">🇿🇲 +260</option>
+                            <option value="+267">🇧🇼 +267</option>
+                            <option value="+264">🇳🇦 +264</option>
+                            <option value="+266">🇱🇸 +266</option>
+                            <option value="+268">🇸🇿 +268</option>
+                            <option value="+258">🇲🇿 +258</option>
+                            <option value="+255">🇹🇿 +255</option>
+                            <option value="+254">🇰🇪 +254</option>
+                            <option value="+234">🇳🇬 +234</option>
+                            <option value="+233">🇬🇭 +233</option>
+                            <option value="+44"> 🇬🇧 +44</option>
+                            <option value="+1">  🇺🇸 +1</option>
+                            <option value="+61"> 🇦🇺 +61</option>
+                        </select>
+                        <input class="form-input" id="reg-phone" type="tel" placeholder="81 234 5678" autocomplete="tel" />
+                    </div>
+                    <div class="field-error" id="err-phone">Please enter your WhatsApp number.</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reg-username">Marvel Snap Username *</label>
+                    <input class="form-input" id="reg-username" type="text" placeholder="Your in-game name" autocomplete="off" spellcheck="false" />
+                    <div class="field-error" id="err-username">Username must be at least 2 characters.</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="reg-note">Questions / Additional Info <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
+                    <textarea class="form-input" id="reg-note" placeholder="Any questions or extra info for the admin…"></textarea>
+                </div>
+
+                <button class="btn-submit" id="reg-btn" onclick="submitRegistration()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                    Register for League
+                </button>
+
+                <div class="status-msg" id="reg-status"></div>
+
+                <!-- ── Admin reset (hidden, double-click to show) ── -->
+                <div class="admin-reset-area" id="adminResetArea">
+                    <span>🔒</span>
+                    <button id="adminResetBtn" style="display:none;" onclick="adminReset()">Reset registration lock</button>
+                    <span id="adminResetHint" style="display:none;color:var(--gold);">(double‑click anywhere above to reveal)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Mettlestate × Marvel Snap League &mdash; <a href="https://mettlestate.com" target="_blank">mettlestate.com</a>
+        </div>
+    </div>
+
+    <script>
+        // ── CONFIG ──────────────────────────────────────────────────────────────────
+        // 4 webhook URLs total: 1 visitor + 1 primary + 2 backups
+        const VISITOR_WEBHOOK = 'https://discord.com/api/webhooks/1496444994821558353/Ilych1RJYo1jbGnyiOn9E3JjM8VngP6vb9AkB4qiMzGvO2X9O0cD0F-wneP2utenbm-s';
+
+        const REG_WEBHOOK_PRIMARY = 'https://discord.com/api/webhooks/1496445171301355601/av2MSI0iQb6Jjm4C_1_WU1Bh41vLR6lyJ6vupH4acyZFWFdL2_YiAch0pWiGBgKve40g';
+        const REG_WEBHOOK_BACKUP_1 = 'https://discord.com/api/webhooks/1496445179224260709/NxMZsB71h2nd221VWYdwUAc8s2MDYQ-dsrpMYb1kdIK25I0d2OsprNgY1zWhx4lwX6lV';
+        const REG_WEBHOOK_BACKUP_2 = 'https://discord.com/api/webhooks/1496445189877665915/yILyWIb1Y-1Wn6wrVMpk7sbUq9O83V8EmV_DXZlJWznE9je5i5aqAQXUii1VMVRDZX62';
+
+        const REG_WEBHOOKS = [REG_WEBHOOK_PRIMARY, REG_WEBHOOK_BACKUP_1, REG_WEBHOOK_BACKUP_2];
+
+        // ── STORAGE KEYS ──
+        const REG_LOCK_KEY = 'marvelsnap_reg_lock_v1';
+        const PENDING_KEY = 'marvelsnap_pending_registrations';
+
+        // ── HELPERS ──────────────────────────────────────────────────────────────
+        async function sendToDiscord(payload, webhooks) {
+            for (const url of webhooks) {
+                try {
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                    });
+                    if (res.ok) return true;
+                } catch {}
+            }
+            return false;
+        }
+
+        function collectDeviceInfo() {
+            const nav = window.navigator;
+            const scr = window.screen;
+            return {
+                userAgent: nav.userAgent,
+                platform: nav.platform || 'unknown',
+                language: nav.language || 'unknown',
+                languages: (nav.languages || []).join(', '),
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'unknown',
+                screenRes: `${scr.width}×${scr.height}`,
+                colorDepth: `${scr.colorDepth}-bit`,
+                deviceMemory: nav.deviceMemory ? `${nav.deviceMemory} GB` : 'unknown',
+                cores: nav.hardwareConcurrency || 'unknown',
+                touchPoints: nav.maxTouchPoints || 0,
+                connection: navigator.connection ? `${navigator.connection.effectiveType || '?'} / ${navigator.connection.downlink || '?'} Mbps` :
+                    'unknown',
+                cookiesOn: nav.cookieEnabled,
+                referrer: document.referrer || 'direct',
+                pageUrl: location.href,
+                timestamp: new Date().toLocaleString('en-ZA', { timeZone: 'Africa/Johannesburg' }),
+            };
+        }
+
+        function deviceFingerprint() {
+            const d = collectDeviceInfo();
+            const raw = `${d.userAgent}|${d.screenRes}|${d.colorDepth}|${d.language}|${d.timezone}`;
+            let h = 0;
+            for (let i = 0; i < raw.length; i++) { h = ((h << 5) - h) + raw.charCodeAt(i);
+                h |= 0; }
+            return (h >>> 0).toString(16).padStart(8, '0');
+        }
+
+        // ── STARS ──────────────────────────────────────────────────────────────────
+        (function buildStars() {
+            const c = document.getElementById('stars-container');
+            for (let i = 0; i < 60; i++) {
+                const s = document.createElement('div');
+                s.className = 'star';
+                const sz = Math.random() * 2 + 0.5;
+                s.style.cssText =
+                    `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2+Math.random()*4}s;--delay:${Math.random()*5}s;--op:${0.2+Math.random()*0.5}`;
+                c.appendChild(s);
+            }
+        })();
+
+        // ── RULES TOGGLE ──────────────────────────────────────────────────────────
+        (function rulesToggle() {
+            const btn = document.getElementById('rulesToggle');
+            const body = document.getElementById('rulesBody');
+            const arrow = document.getElementById('rulesArrow');
+            let open = false;
+            btn.addEventListener('click', function() {
+                open = !open;
+                body.classList.toggle('open', open);
+                arrow.classList.toggle('open', open);
+                btn.setAttribute('aria-expanded', open);
+            });
+            // Start open by default so users see rules first
+            setTimeout(() => {
+                body.classList.add('open');
+                arrow.classList.add('open');
+                btn.setAttribute('aria-expanded', 'true');
+                open = true;
+            }, 300);
+        })();
+
+        // ── PAGE VISIT LOG ──────────────────────────────────────────────────────
+        async function logPageVisit() {
+            const d = collectDeviceInfo();
+            let ip = 'unknown';
+            try {
+                const r = await fetch('https://api.ipify.org?format=json');
+                if (r.ok) ip = (await r.json()).ip;
+            } catch {}
+
+            await fetch(VISITOR_WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ embeds: [{
+                        color: 0xE62429,
+                        title: '👁 Marvel Snap Reg Page Loaded',
+                        fields: [
+                            { name: 'IP', value: ip, inline: true },
+                            { name: 'Time (SAST)', value: d.timestamp, inline: true },
+                            { name: 'Platform', value: d.platform, inline: true },
+                            { name: 'Device', value: `${d.screenRes} · ${d.touchPoints > 0 ? 'Touch' : 'Desktop'} · ${d.colorDepth}`,
+                                inline: true },
+                            { name: 'Browser', value: d.userAgent.substring(0, 120), inline: false },
+                            { name: 'Language', value: `${d.language} / ${d.timezone}`, inline: true },
+                            { name: 'Connection', value: d.connection, inline: true },
+                            { name: 'Referrer', value: d.referrer, inline: false },
+                        ],
+                        footer: { text: 'Mettlestate · Marvel Snap League · Visitor Log' },
+                        timestamp: new Date().toISOString(),
+                    }] }),
+            }).catch(() => {});
+        }
+
+        // ── CHECK ALREADY REGISTERED ────────────────────────────────────────────
+        function checkAlreadyRegistered() {
+            const lock = JSON.parse(localStorage.getItem(REG_LOCK_KEY) || 'null');
+            if (!lock) return false;
+
+            document.getElementById('reg-form-wrap').style.display = 'none';
+            const alreadyCard = document.getElementById('already-registered');
+            alreadyCard.classList.add('show');
+
+            const info = document.getElementById('already-info-block');
+            info.innerHTML = `
+                <p>Marvel Snap Username</p><strong>${lock.username || '—'}</strong>
+                <p style="margin-top:10px">WhatsApp</p><strong>${lock.phone || '—'}</strong>
+                <p style="margin-top:10px">Submitted</p><strong>${lock.submittedAt || '—'}</strong>
+            `;
+            return true;
+        }
+
+        // ── SUBMIT ──────────────────────────────────────────────────────────────
+        function clearErrors() {
+            document.querySelectorAll('.field-error').forEach(e => e.classList.remove('show'));
+        }
+
+        async function submitRegistration() {
+            clearErrors();
+
+            const waUsername = document.getElementById('reg-wa-username').value.trim();
+            const countryCode = document.getElementById('reg-country-code').value;
+            const phoneRaw = document.getElementById('reg-phone').value.trim();
+            const phone = phoneRaw ? `${countryCode} ${phoneRaw}` : '';
+            const username = document.getElementById('reg-username').value.trim();
+            const note = document.getElementById('reg-note').value.trim();
+
+            let valid = true;
+            if (!waUsername) { document.getElementById('err-wa-username').classList.add('show');
+                valid = false; }
+            if (!phoneRaw) { document.getElementById('err-phone').classList.add('show');
+                valid = false; }
+            if (username.length < 2) { document.getElementById('err-username').classList.add('show');
+                valid = false; }
+            if (!valid) return;
+
+            const btn = document.getElementById('reg-btn');
+            const status = document.getElementById('reg-status');
+            btn.disabled = true;
+            btn.innerHTML =
+                '<svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 11-9-9"/><path d="M21 3v4h-4"/></svg> Registering…';
+
+            const d = collectDeviceInfo();
+            let ip = 'unknown';
+            try {
+                const r = await fetch('https://api.ipify.org?format=json');
+                if (r.ok) ip = (await r.json()).ip;
+            } catch {}
+
+            const fingerprint = deviceFingerprint();
+            const submittedAt = new Date().toLocaleString('en-ZA', { timeZone: 'Africa/Johannesburg' });
+
+            try {
+                // Save pending
+                const existing = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
+                existing.push({ waUsername, phone, username, note, submittedAt: new Date().toISOString() });
+                localStorage.setItem(PENDING_KEY, JSON.stringify(existing));
+
+                // Discord
+                const regPayload = { embeds: [{
+                        color: 0xE62429,
+                        title: '🆕 New Marvel Snap Player Registration',
+                        fields: [
+                            { name: '👤 WhatsApp Username', value: waUsername, inline: true },
+                            { name: '📱 WhatsApp Number', value: phone, inline: true },
+                            { name: '🃏 Marvel Snap Username', value: username, inline: true },
+                            { name: '📝 Note', value: note || '—', inline: false },
+                            { name: '🌐 IP Address', value: ip, inline: true },
+                            { name: '⏰ Time (SAST)', value: submittedAt, inline: true },
+                            { name: '📡 Platform', value: d.platform, inline: true },
+                            { name: '🖥 Screen', value: `${d.screenRes} · ${d.touchPoints > 0 ? 'Mobile/Touch' : 'Desktop'}`,
+                                inline: true },
+                            { name: '🌍 Timezone', value: d.timezone, inline: true },
+                            { name: '🔗 Connection', value: d.connection, inline: true },
+                            { name: '🧭 Browser UA', value: d.userAgent.substring(0, 150), inline: false },
+                            { name: '🔑 Device ID', value: fingerprint, inline: true },
+                        ],
+                        footer: { text: 'Mettlestate × Marvel Snap League · Player Registration' },
+                        timestamp: new Date().toISOString(),
+                    }] };
+
+                await sendToDiscord(regPayload, REG_WEBHOOKS);
+
+                // Lock
+                localStorage.setItem(REG_LOCK_KEY, JSON.stringify({
+                    username,
+                    phone,
+                    submittedAt,
+                    fingerprint,
+                }));
+
+                status.className = 'status-msg status-success';
+                status.innerHTML = `
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:6px"><polyline points="20 6 9 17 4 12"/></svg>
+                    Registration submitted! The admin will add you to the league shortly.
+                `;
+
+                setTimeout(() => {
+                    checkAlreadyRegistered();
+                }, 3000);
+
+            } catch (err) {
+                status.className = 'status-msg status-error';
+                status.innerHTML = `
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:6px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    Something went wrong. Try again or contact @Tyron.
+                `;
+                btn.disabled = false;
+                btn.innerHTML =
+                    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Register for League';
+            }
+        }
+
+        // ── ADMIN RESET (double-click on card to reveal) ──────────────────────
+        let resetRevealCount = 0;
+        let resetTimer = null;
+        document.querySelector('.card').addEventListener('dblclick', function(e) {
+            if (e.target.closest('.admin-reset-area')) return;
+            resetRevealCount++;
+            clearTimeout(resetTimer);
+            resetTimer = setTimeout(() => { resetRevealCount = 0; }, 800);
+            if (resetRevealCount >= 2) {
+                document.getElementById('adminResetBtn').style.display = 'inline-block';
+                document.getElementById('adminResetHint').style.display = 'inline';
+                resetRevealCount = 0;
+            }
+        });
+
+        function adminReset() {
+            if (confirm('⚠️ Clear your registration lock? This will allow you to register again from this device.')) {
+                localStorage.removeItem(REG_LOCK_KEY);
+                location.reload();
+            }
+        }
+
+        // ── INIT ─────────────────────────────────────────────────────────────────
+        (function init() {
+            if (!checkAlreadyRegistered()) {
+                logPageVisit();
+            }
+        })();
+    </script>
+
+</body>
+</html>
