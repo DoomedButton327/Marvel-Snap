@@ -122,6 +122,32 @@
 .orb-2 { width: 200px; height: 200px; background: var(--cyan); top: 40%; right: -60px; animation-duration: 24s; animation-delay: -8s; }
 .orb-3 { width: 250px; height: 250px; background: var(--acid-dim); bottom: 20%; left: 30%; animation-duration: 20s; animation-delay: -4s; }
 
+/* ── Cube rain background ── */
+.cube-rain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.cube-rain .cube {
+  position: absolute;
+  top: -40px;
+  width: var(--sz, 14px);
+  height: var(--sz, 14px);
+  border: 1.5px solid var(--clr, var(--acid-border));
+  background: linear-gradient(135deg, rgba(245,197,24,.05), rgba(230,36,41,.04));
+  transform: rotate(45deg);
+  opacity: 0;
+  animation: cubeFall var(--dur, 16s) linear var(--delay, 0s) infinite;
+}
+@keyframes cubeFall {
+  0%   { transform: translateY(-5vh) rotate(15deg); opacity: 0; }
+  8%   { opacity: .45; }
+  92%  { opacity: .3; }
+  100% { transform: translateY(105vh) rotate(400deg); opacity: 0; }
+}
+
 /* ── Section entrance stagger helper ── */
 .stagger > * { animation: slideUp .3s cubic-bezier(.22,1,.36,1) both; }
 .stagger > *:nth-child(1)  { animation-delay: .00s; }
