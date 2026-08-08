@@ -3,44 +3,45 @@
    CSS variables · reset · typography · root tokens
 ================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
 
-/* ── Default theme tokens (Godmode) ── */
+/* ── Default theme tokens (Marvel Snap) ── */
 :root {
-  --acid:         #C8F135;
-  --acid-dim:     #a3c710;
-  --acid-soft:    rgba(200,241,53,.12);
-  --acid-glow:    0 0 20px rgba(200,241,53,.35);
-  --acid-border:  rgba(200,241,53,.25);
-  --border-acid:  rgba(200,241,53,.25);
+  --acid:         #F5C518;
+  --acid-dim:     #c79e10;
+  --acid-soft:    rgba(245,197,24,.12);
+  --acid-glow:    0 0 20px rgba(245,197,24,.35);
+  --acid-border:  rgba(245,197,24,.28);
+  --border-acid:  rgba(245,197,24,.28);
 
-  --cyan:         #C8F135;
-  --cyan-soft:    rgba(200,241,53,.1);
-  --border-cyan:  rgba(200,241,53,.2);
+  --cyan:         #e62429;
+  --cyan-soft:    rgba(230,36,41,.1);
+  --border-cyan:  rgba(230,36,41,.22);
 
-  --bg:           #050a0e;
-  --bg-1:         #0a1218;
-  --bg-2:         #101c24;
-  --bg-3:         #162230;
-  --bg-4:         #1c2a3a;
-  --bg-card:      rgba(16,28,36,.75);
+  --bg:           #0b0a0c;
+  --bg-1:         #121016;
+  --bg-2:         #1c1822;
+  --bg-3:         #28223a;
+  --bg-4:         #332a4a;
+  --bg-card:      rgba(18,16,22,.82);
 
-  --border:       rgba(200,241,53,.12);
-  --border-2:     rgba(200,241,53,.08);
+  --border:       rgba(245,197,24,.14);
+  --border-2:     rgba(230,36,41,.10);
 
-  --text:         #f0f4f8;
-  --text-soft:    #b0bec5;
-  --muted:        #607d8b;
-  --muted-2:      #455a64;
+  --text:         #f0edf5;
+  --text-soft:    #b8b0c8;
+  --muted:        #6f6580;
+  --muted-2:      #453c58;
 
-  --red:          #FF2D55;
+  --red:          #e62429;
   --green:        #34C759;
   --orange:       #FF9500;
-  --gold:         #FFD60A;
+  --gold:         #F5C518;
   --blue:         #0A84FF;
+  --theme-accent: #e62429;
 
-  --theme-poster-bg:   #050a0e;
-  --theme-poster-text: #C8F135;
+  --theme-poster-bg:   #0b0a0c;
+  --theme-poster-text: #F5C518;
 
   --radius:    12px;
   --radius-sm: 6px;
@@ -48,6 +49,7 @@
   --gap:       16px;
   --font-main: 'DM Sans', sans-serif;
   --font-head: 'Bebas Neue', sans-serif;
+  --font-display: 'Anton', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   --nav-h:     60px;
   --topbar-h:  56px;
