@@ -6,6 +6,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
   // ── 1. Init theme immediately (before render to avoid flash) ──
   initTheme();
+  initCubeRain();
 
   // ── 2. Load local data ─────────────────────────────────────
   Storage.loadAll();
@@ -62,6 +63,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ── 11. Discord ping ───────────────────────────────────────
   sendDiscordWebhook({ type: 'pageload' });
 });
+
+// ── Cube rain background ─────────────────────────────────────
+function initCubeRain() {
+  const field = document.getElementById('cube-rain');
+  if (!field) return;
+  const colors = ['rgba(245,197,24,.35)', 'rgba(230,36,41,.3)', 'rgba(26,115,232,.25)', 'rgba(139,92,246,.25)'];
+  const count = window.innerWidth < 600 ? 8 : 14;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'cube';
+    const sz = Math.random() * 13 + 7;
+    el.style.setProperty('--sz', sz + 'px');
+    el.style.setProperty('--clr', colors[i % colors.length]);
+    el.style.setProperty('--dur', (Math.random() * 10 + 14) + 's');
+    el.style.setProperty('--delay', (Math.random() * -22) + 's');
+    el.style.left = (Math.random() * 100) + '%';
+    field.appendChild(el);
+  }
+}
 
 // ── Navigation ────────────────────────────────────────────────
 function initNavigation() {
