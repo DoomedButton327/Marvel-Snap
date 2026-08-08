@@ -86,8 +86,10 @@ Marvel Snap matches end on a Cube count (1/2/4/8+), not a running goal tally, so
 
 ## Themes
 
-10 built-in themes selectable from Admin → Theme:
-Godmode · Cyber Blue · Blood Red · Royal Purple · Solar Orange · Arctic · Matrix · Rose Gold · Void · Neon ⚡
+**Marvel Snap** is the default theme — a comic-book red/gold look matching the public leaderboard and registration page: Anton display type, an animated Cube Rain background, holographic champion podium, gold/silver/bronze rank gems, win-streak fire badges on the standings table, and Snap Impact tags (Retreat Win/Snap Win/Double Snap/MEGA SNAP) on every logged result.
+
+11 built-in themes selectable from Admin → Theme:
+Marvel Snap · Godmode · Cyber Blue · Blood Red · Royal Purple · Solar Orange · Arctic · Matrix · Rose Gold · Void · Neon ⚡
 
 ## Data Model
 
